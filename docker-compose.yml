@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  mongo_db:
+    image: mongo:latest
+    restart: always
+    environment:
+      MONGO_INITDB_DATABASE: cart_db
+      MONGO_INITDB_ROOT_USERNAME: cart
+      MONGO_INITDB_ROOT_PASSWORD: cart123
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongo-data:/data/db
+
+volumes:
+  mongo-data:
+    driver: local
