@@ -5,6 +5,7 @@ import com.example.order_service.dto.OrderDto;
 import com.example.order_service.dto.mapper.InvoiceToOrderMapper;
 import com.example.order_service.dto.mapper.OrderMapper;
 import com.example.order_service.entity.Order;
+import com.example.order_service.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -22,10 +23,17 @@ public class InvoiceService {
     private final WebClient webClient;
     private final OrderMapper orderMapper;
     private final InvoiceToOrderMapper invoiceToOrderMapper;
+    private final OrderRepository orderRepository;
 
-    public Mono<Void> generateInvoice(Order order) {
+    public void generateInvServ(String uuid){
+        Order order = orderRepository.findByUuid(uuid)
+                .orElseThrow(()->new RuntimeException("Order not found"));
         OrderDto orderDto = orderMapper.toOrderDto(order);
         InvoiceDto invoiceBody = invoiceToOrderMapper.orderToInvoice(orderDto);
+        generateInvoice(invoiceBody).subscribe();
+    }
+
+    private Mono<Void> generateInvoice(InvoiceDto invoiceBody) {
 
         return webClient.post()
                 .bodyValue(invoiceBody)
