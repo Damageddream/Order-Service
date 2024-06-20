@@ -10,6 +10,7 @@ import org.mapstruct.Mappings;
 
 @Mapper(componentModel = "spring")
 public interface OrderMapper {
+    //mapper
     OrderDto toOrderDto(Order order);
     Order toOrder(OrderDto orderDto);
     @Mappings({
