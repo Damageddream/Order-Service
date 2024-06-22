@@ -2,12 +2,13 @@ package com.example.order_service.rest;
 
 import com.example.order_service.dto.NewOrderDto;
 import com.example.order_service.dto.OrderDto;
-import com.example.order_service.entity.Order;
 import com.example.order_service.service.InvoiceService;
 import com.example.order_service.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 
@@ -19,9 +20,11 @@ public class OrderRestController {
     private final OrderService orderService;
 
     @PostMapping("/{uuid}/invoice")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void createInvoice(@PathVariable String uuid) {
-        invoiceService.generateInvServ(uuid);
+    @ResponseStatus(HttpStatus.CREATED)
+    public Mono<ResponseEntity<String>> createInvoice(@PathVariable String uuid) {
+        return invoiceService.generateInvServ(uuid)
+                .map(url -> ResponseEntity.status(HttpStatus.CREATED).body(url))
+                .defaultIfEmpty(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
     @PostMapping
