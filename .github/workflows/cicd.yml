@@ -1,0 +1,36 @@
+name: CICD
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  build:
+    runs-on: [ubuntu-latest]
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v3
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: "temurin"
+          java-version: '21'
+      - name: Build Project
+        run: mvn clean package -DskipTests
+      - name: Login to dockerhub
+        run: docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{secrets.DOCKER_PASSWORD}}
+      - name: Build docker image
+        run: docker build -t order-service .
+      - name: Publish mage to docker hub
+        run: docker push order-service:latest
+
+  deploy:
+    needs: build
+    runs-on: [aws-ec2]
+    steps:
+      - name: Pull Image from docker hub
+        run: docker pull order-service:latest
+      - name: Delete old container
+        run: docer rm -f order-service:latest
+      - name: Run docker container
+        run: docker run -d -p 8060:8060 --name springboot-order-service-container order-service:latest

@@ -1,8 +1,11 @@
 package com.example.order_service.mapper;
 
-public class InvoiceToOrderMapperTest {
-}
-package com.example.order_service.mapper;
+import com.example.order_service.dto.InvoiceDto;
+import com.example.order_service.dto.OrderDto;
+import com.example.order_service.dto.mapper.InvoiceToOrderMapper;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mapstruct.factory.Mappers;
 
 import com.example.order_service.dto.InvoiceDto;
 import com.example.order_service.dto.InvoiceItemDto;
@@ -18,7 +21,8 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class InvoiceToOrderMapperTest {
+
+public class InvoiceToOrderMapperTest {
 
     private InvoiceToOrderMapper mapper;
 
@@ -39,7 +43,7 @@ class InvoiceToOrderMapperTest {
         assertNotNull(invoice);
         assertEquals(order.getFrom(), invoice.getFrom());
         assertEquals(order.getTo(), invoice.getTo());
-        assertEquals(order.getItems().size(), invoice.getItems().size());
+        assertEquals(order.getProducts().size(), invoice.getItems().size());
         assertEquals("", invoice.getLogo());
         assertNotNull(invoice.getNumber());
         assertTrue(invoice.getNumber() >= 0 && invoice.getNumber() < 10000);
@@ -49,8 +53,8 @@ class InvoiceToOrderMapperTest {
         assertEquals("Please pay by the due date.", invoice.getTerms());
 
         // Check items
-        for (int i = 0; i < order.getItems().size(); i++) {
-            assertEquals(order.getItems().get(i), invoice.getItems().get(i));
+        for (int i = 0; i < order.getProducts().size(); i++) {
+            assertEquals(order.getProducts().get(i), invoice.getItems().get(i));
         }
     }
 
@@ -63,7 +67,7 @@ class InvoiceToOrderMapperTest {
         return OrderDto.builder()
                 .from("Seller")
                 .to("Buyer")
-                .items(items)
+                .products(items)
                 .build();
     }
 }
