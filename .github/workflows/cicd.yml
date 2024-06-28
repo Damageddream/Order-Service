@@ -31,6 +31,6 @@ jobs:
       - name: Pull Image from docker hub
         run: docker pull damageddream/order-service:latest
       - name: Delete old container
-        run: docker rm -f springboot-order-service-container
+        run: docker rm -f springboot-order-service-container || true
       - name: Run docker container
         run: docker run -d -p 8060:8060 --name springboot-order-service-container damageddream/order-service .
