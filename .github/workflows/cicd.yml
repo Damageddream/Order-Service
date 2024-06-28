@@ -20,17 +20,17 @@ jobs:
       - name: Login to dockerhub
         run: docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{secrets.DOCKER_PASSWORD}}
       - name: Build docker image
-        run: docker build -t order-service .
+        run: docker build -t damageddream/order-service .
       - name: Publish mage to docker hub
-        run: docker push order-service:latest
+        run: docker push damageddream/order-service:latest
 
   deploy:
     needs: build
     runs-on: [aws-ec2]
     steps:
       - name: Pull Image from docker hub
-        run: docker pull order-service:latest
+        run: docker pull damageddream/order-service:latest
       - name: Delete old container
-        run: docer rm -f order-service:latest
+        run: docker rm -f springboot-order-service-container
       - name: Run docker container
-        run: docker run -d -p 8060:8060 --name springboot-order-service-container order-service:latest
+        run: docker run -d -p 8060:8060 --name springboot-order-service-container damageddream/order-service .
