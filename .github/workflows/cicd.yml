@@ -37,7 +37,6 @@ jobs:
           echo "AWS_SECRET=${{ secrets.AWS_SECRET }}" >> /home/ec2-user/deployment/.env
       - name: Run application and db with docker-compose
         run: |
-          cd /home/ec2-user/deployment
           docker-compose down
           docker-compose pull damageddream/order-service:latest
           docker-compose up -d
