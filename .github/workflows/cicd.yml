@@ -38,5 +38,5 @@ jobs:
       - name: Run application and db with docker-compose
         run: |
           docker-compose down
-          docker-compose pull
+          docker-compose pull damageddream/order-service:latest
           docker-compose up -d
