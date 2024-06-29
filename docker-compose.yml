@@ -13,6 +13,18 @@ services:
     volumes:
       - mongo-data:/data/db
 
+  order-service:
+    image: damageddream/order-service:latest
+    environment:
+      - SPRING_DATA_MONGODB_URI=mongodb://cart:cart123@mongo_db:27017/cart_db?authSource=admin
+      - invoice.api.key=${INVOICE_KEY}
+      - aws.accessKeyId=${AWS_KEY}
+      - aws.secretKey=${AWS_SECRET}
+    ports:
+      - "8060:8060"
+    depends_on:
+      - mongo_db
+
 volumes:
   mongo-data:
     driver: local

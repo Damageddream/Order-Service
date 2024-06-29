@@ -28,9 +28,15 @@ jobs:
     needs: build
     runs-on: [aws-ec2]
     steps:
-      - name: Pull Image from docker hub
-        run: docker pull damageddream/order-service:latest
-      - name: Delete old container
-        run: docker rm -f springboot-order-service-container || true
-      - name: Run docker container
-        run: docker run -d -p 8060:8060 --name springboot-order-service-container damageddream/order-service .
+      - name: Checkout source
+        uses: actions/checkout@v3
+      - name: Setup env variables
+        run: |
+          export INVOICE_KEY=${{ secrets.INVOICE_KEY}}
+          export AWS_KEY=${{ secrets.AWS_KEY }}
+          export AWS_SECRET=${{ secrets.AWS_SECRET }}
+      - name: Run application and db with docker-compose
+        run: |
+          docker-compose down
+          docker-compose pull
+          docker-compose up -d
