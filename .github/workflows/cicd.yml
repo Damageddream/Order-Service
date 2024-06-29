@@ -32,11 +32,11 @@ jobs:
         uses: actions/checkout@v3
       - name: Create .env file
         run: |
-          echo "INVOICE_KEY=${{ secrets.INVOICE_KEY }}" > /home/ec2-user/deployment/.env
-          echo "AWS_KEY=${{ secrets.AWS_KEY }}" >> /home/ec2-user/deployment/.env
-          echo "AWS_SECRET=${{ secrets.AWS_SECRET }}" >> /home/ec2-user/deployment/.env
+          echo "INVOICE_KEY=${{ secrets.INVOICE_KEY }}" > .env
+          echo "AWS_KEY=${{ secrets.AWS_KEY }}" >> .env
+          echo "AWS_SECRET=${{ secrets.AWS_SECRET }}" >> .env
       - name: Run application and db with docker-compose
         run: |
           docker-compose down
-          docker-compose pull damageddream/order-service:latest
+          docker pull damageddream/order-service:latest
           docker-compose up -d
