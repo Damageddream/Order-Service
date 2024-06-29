@@ -28,12 +28,8 @@ jobs:
     needs: build
     runs-on: [aws-ec2]
     steps:
-      - name: Ensure deployment directory exists
-        run: mkdir -p /home/ec2-user/deployment
       - name: Checkout source
         uses: actions/checkout@v3
-        with:
-          path: /home/ec2-user/deployment
       - name: Create .env file
         run: |
           echo "INVOICE_KEY=${{ secrets.INVOICE_KEY }}" > /home/ec2-user/deployment/.env
